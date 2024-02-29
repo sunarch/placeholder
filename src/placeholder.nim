@@ -10,6 +10,8 @@ from system import quit, QUIT_SUCCESS, QUIT_FAILURE
 import version as version
 import presets as presets
 
+const DEBUG = false
+
 proc show_help =
   echo(version.long())
   echo(version.compiled())
@@ -25,7 +27,6 @@ proc show_help =
   echo("  --preset:name  WARNING! Display a preset by name (if it exists)")
   echo("  --no-parens    Don't use parentheses")
   echo("  --no-this      Don't use 'This is a' in front of the text")
-  echo("  --debug        WARNING! Add debug information to output")
 
 proc direct_output(output: string) =
   quit(output, QUIT_SUCCESS)
@@ -79,7 +80,6 @@ proc main =
     preset_name = ""
     use_parens = true
     use_this = true
-    warning_display_debug = false
 
   const options_long_no_val = @[
     "help",
@@ -90,7 +90,10 @@ proc main =
   ]
 
   var p = po.initOptParser(shortNoVal = {}, longNoVal = options_long_no_val)
-  var p_debug = p
+
+  when DEBUG:
+    var p_debug = p
+    debug_output_options(p_debug)
 
   while true:
     p.next()
@@ -114,15 +117,10 @@ proc main =
             use_parens = false
           of "no-this":
             use_this = false
-          of "debug":
-            warning_display_debug = true
           else:
             quit(fmt"Unrecognized command line option '{p.key}'", QUIT_FAILURE)
       of po.cmdArgument:
         quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QUIT_FAILURE)
-
-  if warning_display_debug:
-    debug_output_options(p_debug)
 
   if show_help:
     show_help()
