@@ -8,9 +8,7 @@ from system import quit, QUIT_SUCCESS, QUIT_FAILURE
 
 # project imports
 import version as version
-
-const
-  PROTOTYPE = "(this is a placeholder to keep the timeline from clearing)"
+import presets as presets
 
 proc show_help =
   echo(version.long())
@@ -20,12 +18,14 @@ proc show_help =
   echo(fmt"    {version.PROGRAM_NAME} [options]")
   echo()
   echo("Options:")
-  echo("  --help       Show this help and exit")
-  echo("  --version    Show version information and exit")
-  echo("  --prototype  Display the prototype text without modification")
-  echo("  --no-parens  Don't use parentheses")
-  echo("  --no-this    Don't use 'This is a' in front of the text")
-  echo("  --debug      WARNING! Add debug information to output")
+  echo("  --help         WARNING! Show this help and exit")
+  echo("  --version      WARNING! Show version information and exit")
+  echo("  --prototype    Display the prototype text without modification")
+  echo("  --preset       WARNING! Display available presets")
+  echo("  --preset:name  WARNING! Display a preset by name (if it exists)")
+  echo("  --no-parens    Don't use parentheses")
+  echo("  --no-this      Don't use 'This is a' in front of the text")
+  echo("  --debug        WARNING! Add debug information to output")
 
 proc quit_cmd_option_unnecessary_value(option: string) =
   quit(fmt"Command line option '{option}' doesn't take a value", QUIT_FAILURE)
@@ -65,6 +65,8 @@ proc main =
     show_help_only = false
     show_version_only = false
     show_prototype = false
+    show_preset = false
+    preset_name = ""
     use_parens = true
     use_this = true
     warning_show_debug = false
@@ -94,6 +96,9 @@ proc main =
             show_version_only = true
           of "prototype":
             show_prototype = true
+          of "preset":
+            show_preset = true
+            preset_name = p.val
           of "no-parens":
             use_parens = false
           of "no-this":
@@ -116,7 +121,20 @@ proc main =
     direct_output(version.long())
 
   if show_prototype:
-    direct_output(PROTOTYPE)
+    direct_output(presets.lookup("prototype"))
+
+  if show_preset:
+    if preset_name == "":
+      echo("Available presets:")
+      for preset in presets.keys():
+        echo(fmt"  - {preset}")
+      quit(QUIT_SUCCESS)
+
+    if not presets.check(preset_name):
+      echo(fmt"No preset with given name: '{preset_name}'")
+      quit(QUIT_FAILURE)
+
+    direct_output(presets.lookup(preset_name))
 
   echo(placeholder(use_this, use_parens))
 
