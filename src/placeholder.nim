@@ -40,6 +40,19 @@ proc debug_output_options(p_debug: var po.OptParser) =
     if p_debug.kind == po.cmdEnd:
       break
 
+proc output_preset(preset_name: string) =
+  if preset_name == "":
+    echo("Available presets:")
+    for preset in presets.keys():
+      echo(fmt"  - {preset}")
+    quit(QUIT_SUCCESS)
+
+  if not presets.check(preset_name):
+    echo(fmt"No preset with given name: '{preset_name}'")
+    quit(QUIT_FAILURE)
+
+  direct_output(presets.lookup(preset_name))
+
 proc placeholder(use_this: bool, use_parens: bool): string =
   const
     this = "this is a"
@@ -59,14 +72,14 @@ proc placeholder(use_this: bool, use_parens: bool): string =
 
 proc main =
   var
-    show_help_only = false
-    show_version_only = false
+    show_help = false
+    show_version = false
     show_prototype = false
     show_preset = false
     preset_name = ""
     use_parens = true
     use_this = true
-    warning_show_debug = false
+    warning_display_debug = false
 
   const options_long_no_val = @[
     "help",
@@ -78,6 +91,7 @@ proc main =
 
   var p = po.initOptParser(shortNoVal = {}, longNoVal = options_long_no_val)
   var p_debug = p
+
   while true:
     p.next()
     case p.kind
@@ -88,9 +102,9 @@ proc main =
           quit(fmt"Command line option '{p.key}' doesn't take a value", QUIT_FAILURE)
         case p.key:
           of "help":
-            show_help_only = true
+            show_help = true
           of "version":
-            show_version_only = true
+            show_version = true
           of "prototype":
             show_prototype = true
           of "preset":
@@ -101,37 +115,27 @@ proc main =
           of "no-this":
             use_this = false
           of "debug":
-            warning_show_debug = true
+            warning_display_debug = true
           else:
             quit(fmt"Unrecognized command line option '{p.key}'", QUIT_FAILURE)
       of po.cmdArgument:
         quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QUIT_FAILURE)
 
-  if warning_show_debug:
+  if warning_display_debug:
     debug_output_options(p_debug)
 
-  if show_help_only:
+  if show_help:
     show_help()
     quit(QUIT_SUCCESS)
 
-  if show_version_only:
+  if show_version:
     direct_output(version.long())
 
   if show_prototype:
     direct_output(presets.lookup("prototype"))
 
   if show_preset:
-    if preset_name == "":
-      echo("Available presets:")
-      for preset in presets.keys():
-        echo(fmt"  - {preset}")
-      quit(QUIT_SUCCESS)
-
-    if not presets.check(preset_name):
-      echo(fmt"No preset with given name: '{preset_name}'")
-      quit(QUIT_FAILURE)
-
-    direct_output(presets.lookup(preset_name))
+    output_preset(preset_name)
 
   echo(placeholder(use_this, use_parens))
 
