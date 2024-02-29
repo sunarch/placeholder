@@ -1,7 +1,7 @@
 import std/parseopt as po
 import std/times as times
 from std/strformat import fmt
-from system import quit
+from system import quit, QUIT_SUCCESS, QUIT_FAILURE
 
 const
   DEBUG = false
@@ -47,10 +47,10 @@ proc show_help =
   echo("  --no-this    Don't use 'This is a' in front of the text")
 
 proc quit_cmd_option_unnecessary_value(option: string) =
-  quit(fmt"Command line option '{option}' doesn't take a value", 1)
+  quit(fmt"Command line option '{option}' doesn't take a value", QUIT_FAILURE)
 
 proc direct_output(output: string) =
-  quit(output, 0)
+  quit(output, QUIT_SUCCESS)
 
 const options_long_no_val = @[
   "help",
@@ -85,13 +85,13 @@ while true:
         of "no-this":
           use_this = false
         else:
-          quit(fmt"Unrecognized command line option '{p.key}'", 1)
+          quit(fmt"Unrecognized command line option '{p.key}'", QUIT_FAILURE)
     of po.cmdArgument:
-      quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", 1)
+      quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QUIT_FAILURE)
 
 if show_help_only:
   show_help()
-  quit(0)
+  quit(QUIT_SUCCESS)
 
 if show_version_only:
   direct_output(version(full = true))
