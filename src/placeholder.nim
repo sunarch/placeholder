@@ -4,9 +4,6 @@ from std/strformat import fmt
 from system import quit, QUIT_SUCCESS, QUIT_FAILURE
 
 const
-  DEBUG = false
-
-const
   PROGRAM_NAME = "placeholder"
   VERSION_MAJOR = 0
   VERSION_MINOR = 2
@@ -28,6 +25,7 @@ var
   show_prototype = false
   use_parens = true
   use_this = true
+  warning_show_debug = false
 
 proc current_date: string =
   result = times.now().format("yyyy-MM-dd")
@@ -45,6 +43,7 @@ proc show_help =
   echo("  --prototype  Display the prototype text without modification")
   echo("  --no-parens  Don't use parentheses")
   echo("  --no-this    Don't use 'This is a' in front of the text")
+  echo("  --debug      WARNING! Add debug information to output")
 
 proc quit_cmd_option_unnecessary_value(option: string) =
   quit(fmt"Command line option '{option}' doesn't take a value", QUIT_FAILURE)
@@ -60,13 +59,9 @@ const options_long_no_val = @[
   "no-this"
 ]
 var p = po.initOptParser(shortNoVal = {}, longNoVal = options_long_no_val)
+var p_debug = p
 while true:
   p.next()
-  when DEBUG:
-    stdout.write(fmt"Option: ({p.kind})")
-    if p.kind != po.cmdEnd:
-      stdout.write(fmt" '{p.key}' = '{p.val}'")
-    echo()
   case p.kind
     of po.cmdEnd:
       break
@@ -84,10 +79,25 @@ while true:
           use_parens = false
         of "no-this":
           use_this = false
+        of "debug":
+          warning_show_debug = true
         else:
           quit(fmt"Unrecognized command line option '{p.key}'", QUIT_FAILURE)
     of po.cmdArgument:
       quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QUIT_FAILURE)
+
+proc debug_output_options(p_debug: var po.OptParser) =
+  while true:
+      p_debug.next()
+      stdout.write(fmt"Option: ({p_debug.kind})")
+      if p_debug.kind != po.cmdEnd:
+        stdout.write(fmt" '{p_debug.key}' = '{p_debug.val}'")
+      echo()
+      if p_debug.kind == po.cmdEnd:
+        break
+
+if warning_show_debug:
+  debug_output_options(p_debug)
 
 if show_help_only:
   show_help()
