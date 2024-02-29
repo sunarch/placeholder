@@ -52,14 +52,14 @@ proc quit_cmd_option_unnecessary_value(option: string) =
 proc direct_output(output: string) =
   quit(output, 0)
 
-const long_no_val = @[
+const options_long_no_val = @[
   "help",
   "version",
   "prototype",
   "no-parens",
   "no-this"
 ]
-var p = po.initOptParser(shortNoVal = {}, longNoVal = long_no_val)
+var p = po.initOptParser(shortNoVal = {}, longNoVal = options_long_no_val)
 while true:
   p.next()
   when DEBUG:
@@ -71,7 +71,7 @@ while true:
     of po.cmdEnd:
       break
     of po.cmdShortOption, po.cmdLongOption:
-      if p.key in long_no_val and p.val != "":
+      if p.key in options_long_no_val and p.val != "":
         quit_cmd_option_unnecessary_value(p.key)
       case p.key:
         of "help":
