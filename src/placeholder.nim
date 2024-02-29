@@ -33,7 +33,7 @@ proc current_date: string =
   result = times.now().format("yyyy-MM-dd")
 
 proc show_help =
-  echo(version(full=true))
+  echo(version(full = true))
   echo(fmt"Compiled on {current_date()}")
   echo(fmt"Copyright (c) {COPYRIGHT_YEARS} by {COPYRIGHT_NAME}")
   echo()
@@ -94,7 +94,7 @@ if show_help_only:
   quit(0)
 
 if show_version_only:
-  direct_output(version(full=true))
+  direct_output(version(full = true))
 
 if show_prototype:
   direct_output(PROTOTYPE)
@@ -107,13 +107,14 @@ const
   noun = "timeline"
   last_part = "clearing"
 
-var
-  output = fmt"placeholder to {verb} {article} {noun} {particle} {last_part}"
+proc placeholder: string =
 
-if use_this:
-  output = fmt"{this} {output}"
+  result = fmt"placeholder to {verb} {article} {noun} {particle} {last_part}"
 
-if use_parens:
-  output = fmt"({output})"
+  if use_this:
+    result = fmt"{this} {result}"
 
-echo(output)
+  if use_parens:
+    result = fmt"({result})"
+
+echo(placeholder())
