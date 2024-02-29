@@ -44,19 +44,6 @@ proc debug_output_options(p_debug: var po.OptParser) =
     if p_debug.kind == po.cmdEnd:
       break
 
-proc output_preset(preset_name: string) =
-  if preset_name == "":
-    echo("Available presets:")
-    for preset in presets.keys():
-      echo(fmt"  - {preset}")
-    quit(QUIT_SUCCESS)
-
-  if not presets.check(preset_name):
-    echo(fmt"No preset with given name: '{preset_name}'")
-    quit(QUIT_FAILURE)
-
-  direct_output(presets.lookup(preset_name))
-
 type Options = object
   use_this: bool = true
   use_parens: bool = true
@@ -111,9 +98,9 @@ proc main =
           of "version":
             direct_output(version.long())
           of "prototype":
-            direct_output(presets.lookup("prototype"))
+            direct_output(presets.prototype)
           of "preset":
-            output_preset(p.val)
+            presets.output(p.val)
         # Options for regular output:
           of "no-parens":
             display_options.use_parens = false
