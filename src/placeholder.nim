@@ -1,20 +1,13 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 import std/parseopt as po
-import std/times as times
 from std/strformat import fmt
 from system import quit, QUIT_SUCCESS, QUIT_FAILURE
 
-const
-  PROGRAM_NAME = "placeholder"
-  VERSION_MAJOR = 0
-  VERSION_MINOR = 2
-  VERSION_PATCH = 0
-  COPYRIGHT_YEARS = "2024"
-  COPYRIGHT_NAME = "András Németh"
-
-proc version(full = false): string =
-  result = fmt"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
-  if full:
-    result = fmt"{PROGRAM_NAME} v{result}"
+# project imports
+import version as version
 
 const
   PROTOTYPE = "(this is a placeholder to keep the timeline from clearing)"
@@ -27,15 +20,12 @@ var
   use_this = true
   warning_show_debug = false
 
-proc current_date: string =
-  result = times.now().format("yyyy-MM-dd")
-
 proc show_help =
-  echo(version(full = true))
-  echo(fmt"Compiled on {current_date()}")
-  echo(fmt"Copyright (c) {COPYRIGHT_YEARS} by {COPYRIGHT_NAME}")
+  echo(version.long())
+  echo(version.compiled())
+  echo(version.copyright())
   echo()
-  echo("    {PROGRAM_NAME} [options]")
+  echo(fmt"    {version.PROGRAM_NAME} [options]")
   echo()
   echo("Options:")
   echo("  --help       Show this help and exit")
@@ -104,7 +94,7 @@ if show_help_only:
   quit(QUIT_SUCCESS)
 
 if show_version_only:
-  direct_output(version(full = true))
+  direct_output(version.long())
 
 if show_prototype:
   direct_output(PROTOTYPE)
