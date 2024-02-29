@@ -4,7 +4,9 @@
 
 from std/strformat import fmt
 import std/tables as tables
-from system import quit, QUIT_SUCCESS, QUIT_FAILURE
+
+# project imports
+import exit as exit
 
 let presets = tables.toTable({
   "prototype": "(this is a placeholder to keep the timeline from clearing)"
@@ -29,10 +31,9 @@ proc output*(preset_name: string) =
     echo("Available presets:")
     for preset in keys():
       echo(fmt"  - {preset}")
-    quit(QUIT_SUCCESS)
+    exit.success()
 
   if not check(preset_name):
-    echo(fmt"No preset with given name: '{preset_name}'")
-    quit(QUIT_FAILURE)
+    exit.failure_msg(fmt"No preset with given name: '{preset_name}'")
 
-  quit(lookup(preset_name), QUIT_SUCCESS)
+  exit.success_msg(lookup(preset_name))

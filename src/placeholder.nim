@@ -4,11 +4,11 @@
 
 import std/parseopt as po
 from std/strformat import fmt
-from system import quit, QUIT_SUCCESS, QUIT_FAILURE
 
 # project imports
 import version as version
 import presets as presets
+import exit as exit
 
 const DEBUG = false
 
@@ -29,10 +29,7 @@ proc show_help =
   echo("Options for regular output:")
   echo("  --no-parens    Don't use parentheses")
   echo("  --no-this      Don't use 'This is a' in front of the text")
-  quit(QUIT_SUCCESS)
-
-proc direct_output(output: string) =
-  quit(output, QUIT_SUCCESS)
+  exit.success()
 
 proc debug_output_options(p_debug: var po.OptParser) =
   while true:
@@ -90,15 +87,15 @@ proc main =
         break
       of po.cmdShortOption, po.cmdLongOption:
         if p.key in options_long_no_val and p.val != "":
-          quit(fmt"Command line option '{p.key}' doesn't take a value", QUIT_FAILURE)
+          exit.failure_msg(fmt"Command line option '{p.key}' doesn't take a value")
         case p.key:
         # Options for direct output:
           of "help":
             show_help()
           of "version":
-            direct_output(version.long())
+            success_msg(version.long())
           of "prototype":
-            direct_output(presets.prototype)
+            success_msg(presets.prototype)
           of "preset":
             presets.output(p.val)
         # Options for regular output:
@@ -107,9 +104,9 @@ proc main =
           of "no-this":
             display_options.use_this = false
           else:
-            quit(fmt"Unrecognized command line option '{p.key}'", QUIT_FAILURE)
+            exit.failure_msg(fmt"Unrecognized command line option '{p.key}'")
       of po.cmdArgument:
-        quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QUIT_FAILURE)
+        exit.failure_msg(fmt"This program doesn't take any non-option arguments: '{p.key}'")
 
   echo(placeholder(display_options))
 
