@@ -29,10 +29,10 @@ var
   use_parens = true
   use_this = true
 
-proc current_date(): string =
+proc current_date: string =
   result = times.now().format("yyyy-MM-dd")
 
-proc show_help() =
+proc show_help =
   echo(version(full=true))
   echo(fmt"Compiled on {current_date()}")
   echo(fmt"Copyright (c) {COPYRIGHT_YEARS} by {COPYRIGHT_NAME}")
