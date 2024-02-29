@@ -27,9 +27,6 @@ proc show_help =
   echo("  --no-this      Don't use 'This is a' in front of the text")
   echo("  --debug        WARNING! Add debug information to output")
 
-proc quit_cmd_option_unnecessary_value(option: string) =
-  quit(fmt"Command line option '{option}' doesn't take a value", QUIT_FAILURE)
-
 proc direct_output(output: string) =
   quit(output, QUIT_SUCCESS)
 
@@ -88,7 +85,7 @@ proc main =
         break
       of po.cmdShortOption, po.cmdLongOption:
         if p.key in options_long_no_val and p.val != "":
-          quit_cmd_option_unnecessary_value(p.key)
+          quit(fmt"Command line option '{p.key}' doesn't take a value", QUIT_FAILURE)
         case p.key:
           of "help":
             show_help_only = true
