@@ -29,6 +29,7 @@ proc show_help =
   echo("Options for regular output:")
   echo("  --no-parens    Don't use parentheses")
   echo("  --no-this      Don't use 'This is a' in front of the text")
+  quit(QUIT_SUCCESS)
 
 proc direct_output(output: string) =
   quit(output, QUIT_SUCCESS)
@@ -56,7 +57,11 @@ proc output_preset(preset_name: string) =
 
   direct_output(presets.lookup(preset_name))
 
-proc placeholder(use_this: bool, use_parens: bool): string =
+type Options = object
+  use_this: bool = true
+  use_parens: bool = true
+
+proc placeholder(options: Options): string =
   const
     this = "this is a"
     verb = "keep"
@@ -67,21 +72,13 @@ proc placeholder(use_this: bool, use_parens: bool): string =
 
   result = fmt"placeholder to {verb} {article} {noun} {particle} {last_part}"
 
-  if use_this:
+  if options.use_this:
     result = fmt"{this} {result}"
 
-  if use_parens:
+  if options.use_parens:
     result = fmt"({result})"
 
 proc main =
-  var
-    show_help = false
-    show_version = false
-    show_prototype = false
-    show_preset = false
-    preset_name = ""
-    use_parens = true
-    use_this = true
 
   const options_long_no_val = @[
     "help",
@@ -97,6 +94,8 @@ proc main =
     var p_debug = p
     debug_output_options(p_debug)
 
+  var display_options = Options()
+
   while true:
     p.next()
     case p.kind
@@ -106,38 +105,26 @@ proc main =
         if p.key in options_long_no_val and p.val != "":
           quit(fmt"Command line option '{p.key}' doesn't take a value", QUIT_FAILURE)
         case p.key:
+        # Options for direct output:
           of "help":
-            show_help = true
+            show_help()
           of "version":
-            show_version = true
+            direct_output(version.long())
           of "prototype":
-            show_prototype = true
+            direct_output(presets.lookup("prototype"))
           of "preset":
-            show_preset = true
-            preset_name = p.val
+            output_preset(p.val)
+        # Options for regular output:
           of "no-parens":
-            use_parens = false
+            display_options.use_parens = false
           of "no-this":
-            use_this = false
+            display_options.use_this = false
           else:
             quit(fmt"Unrecognized command line option '{p.key}'", QUIT_FAILURE)
       of po.cmdArgument:
         quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QUIT_FAILURE)
 
-  if show_help:
-    show_help()
-    quit(QUIT_SUCCESS)
-
-  if show_version:
-    direct_output(version.long())
-
-  if show_prototype:
-    direct_output(presets.lookup("prototype"))
-
-  if show_preset:
-    output_preset(preset_name)
-
-  echo(placeholder(use_this, use_parens))
+  echo(placeholder(display_options))
 
 when isMainModule:
   main()
