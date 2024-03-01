@@ -17,7 +17,7 @@ proc show_help =
   echo(version.compiled())
   echo(version.copyright())
   echo()
-  echo(fmt"    {version.PROGRAM_NAME} [options]")
+  echo(fmt"    {version.ProgramName} [options]")
   echo()
   echo("Options for direct output:")
   echo("  --help         WARNING! Show this help and exit")

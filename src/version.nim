@@ -5,21 +5,21 @@
 from std/strformat import fmt
 
 const
-  PROGRAM_NAME* = "placeholder"
-  VERSION_MAJOR = 0
-  VERSION_MINOR = 3
-  VERSION_PATCH = 0
-  COPYRIGHT_YEARS = "2024"
-  COPYRIGHT_NAME = "András Németh"
+  ProgramName* = "placeholder"
+  VersionMajor = 0
+  VersionMinor = 3
+  VersionPatch = 0
+  CopyrightYears = "2024"
+  CopyrightName = "András Németh"
 
 proc short: string =
-  result = fmt"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+  result = fmt"{VersionMajor}.{VersionMinor}.{VersionPatch}"
 
 proc long*: string =
-  result = fmt"{PROGRAM_NAME} {short()}"
+  result = fmt"{ProgramName} {short()}"
 
 proc compiled*: string =
   result = fmt"Compiled on {COMPILE_DATE}"
 
 proc copyright*: string =
-  result = fmt"Copyright (c) {COPYRIGHT_YEARS} by {COPYRIGHT_NAME}"
+  result = fmt"Copyright (c) {CopyrightYears} by {CopyrightName}"

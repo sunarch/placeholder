@@ -2,16 +2,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from system import string, quit, QUIT_SUCCESS, QUIT_FAILURE
+from system import string, quit, QuitSuccess, QuitFailure
 
 proc success* =
-  quit(QUIT_SUCCESS)
+  quit(QuitSuccess)
 
 proc success_msg*(output: string) =
-  quit(output, QUIT_SUCCESS)
+  quit(output, QuitSuccess)
 
 proc failure* =
-  quit(QUIT_FAILURE)
+  quit(QuitFailure)
 
 proc failure_msg*(output: string) =
-  quit(output, QUIT_FAILURE)
+  quit(output, QuitFailure)
