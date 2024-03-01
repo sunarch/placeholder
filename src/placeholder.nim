@@ -23,7 +23,7 @@ proc show_help =
   echo("  --help         WARNING! Show this help and exit")
   echo("  --version      WARNING! Show version information and exit")
   echo("  --prototype    Display the prototype text without modification")
-  echo("  --preset       WARNING! Display available presets")
+  echo("  --preset-list  WARNING! Display available presets")
   echo("  --preset:name  WARNING! Display a preset by name (if it exists)")
   echo()
   echo("Options for regular output:")
@@ -68,6 +68,7 @@ proc main =
     "help",
     "version",
     "prototype",
+    "preset-list",
     "no-parens",
     "no-this"
   ]
@@ -96,6 +97,8 @@ proc main =
             success_msg(version.long())
           of "prototype":
             success_msg(presets.prototype)
+          of "preset-list":
+            presets.list()
           of "preset":
             presets.output(p.val)
         # Options for regular output:

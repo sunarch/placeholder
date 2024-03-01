@@ -27,13 +27,13 @@ proc lookup(preset_name: string): string =
 
 let prototype* = presets["prototype"]
 
-proc output*(preset_name: string) =
-  if preset_name == "":
-    echo("Available presets:")
-    for preset in keys():
-      echo(fmt"  - {preset}")
-    exit.success()
+proc list* =
+  echo("Available presets:")
+  for preset in keys():
+    echo(fmt"  - {preset}")
+  exit.success()
 
+proc output*(preset_name: string) =
   let preset_value = lookup(preset_name)
   case preset_value
     of "":

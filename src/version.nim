@@ -7,8 +7,8 @@ from std/strformat import fmt
 const
   PROGRAM_NAME* = "placeholder"
   VERSION_MAJOR = 0
-  VERSION_MINOR = 2
-  VERSION_PATCH = 2
+  VERSION_MINOR = 3
+  VERSION_PATCH = 0
   COPYRIGHT_YEARS = "2024"
   COPYRIGHT_NAME = "András Németh"
 

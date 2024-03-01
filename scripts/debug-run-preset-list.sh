@@ -10,4 +10,4 @@ nim compile \
     --define:COMPILE_DATE:"$CURRENT_DATE" \
     --out:placeholder-debug --outdir:../build \
     --run ../src/placeholder.nim \
-    --preset
+    --preset-list
