@@ -4,4 +4,10 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-nim compile -o:placeholder --outdir:../build -d:release --passL:-static ../src/placeholder.nim
+CURRENT_DATE=$(date +"%Y-%m-%d")
+
+nim compile \
+    --define:COMPILE_DATE:"$CURRENT_DATE" \
+    --out:placeholder --outdir:../build \
+    -d:release --passL:-static \
+    ../src/placeholder.nim
