@@ -8,7 +8,7 @@ const
   PROGRAM_NAME* = "placeholder"
   VERSION_MAJOR = 0
   VERSION_MINOR = 2
-  VERSION_PATCH = 1
+  VERSION_PATCH = 2
   COPYRIGHT_YEARS = "2024"
   COPYRIGHT_NAME = "András Németh"
 

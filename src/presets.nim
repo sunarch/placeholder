@@ -20,9 +20,10 @@ proc check(preset_name: string): bool =
   result = presets.hasKey(preset_name)
 
 proc lookup(preset_name: string): string =
-  if check(preset_name):
+  if not check(preset_name):
     result = ""
-  result = presets[preset_name]
+  else:
+    result = presets[preset_name]
 
 let prototype* = presets["prototype"]
 
@@ -33,7 +34,9 @@ proc output*(preset_name: string) =
       echo(fmt"  - {preset}")
     exit.success()
 
-  if not check(preset_name):
-    exit.failure_msg(fmt"No preset with given name: '{preset_name}'")
-
-  exit.success_msg(lookup(preset_name))
+  let preset_value = lookup(preset_name)
+  case preset_value
+    of "":
+      exit.failure_msg(fmt"No preset with given name: '{preset_name}'")
+    else:
+      exit.success_msg(preset_value)
