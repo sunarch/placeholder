@@ -7,6 +7,7 @@
 CURRENT_DATE=$(date +"%Y-%m-%d")
 
 nim compile \
+    --define:DEBUG \
     --define:COMPILE_DATE:"$CURRENT_DATE" \
     --out:placeholder-debug --outdir:../build \
     --run ../src/placeholder.nim

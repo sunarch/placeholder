@@ -9,8 +9,8 @@ from std/strformat import fmt
 import version as version
 import presets as presets
 import exit as exit
-
-const DEBUG = false
+when defined(DEBUG):
+  import debug as debug
 
 proc show_help =
   echo(version.long())
@@ -30,16 +30,6 @@ proc show_help =
   echo("  --no-parens    Don't use parentheses")
   echo("  --no-this      Don't use 'This is a' in front of the text")
   exit.success()
-
-proc debug_output_options(p_debug: var po.OptParser) =
-  while true:
-    p_debug.next()
-    stdout.write(fmt"Option: ({p_debug.kind})")
-    if p_debug.kind != po.cmdEnd:
-      stdout.write(fmt" '{p_debug.key}' = '{p_debug.val}'")
-    echo()
-    if p_debug.kind == po.cmdEnd:
-      break
 
 type Options = object
   use_this: bool = true
@@ -75,9 +65,9 @@ proc main =
 
   var p = po.initOptParser(shortNoVal = {}, longNoVal = options_long_no_val)
 
-  when DEBUG:
+  when defined(DEBUG):
     var p_debug = p
-    debug_output_options(p_debug)
+    debug.output_options(p_debug)
 
   var display_options = Options()
 
