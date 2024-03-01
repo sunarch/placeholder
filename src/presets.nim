@@ -9,7 +9,8 @@ import std/tables as tables
 import exit as exit
 
 let presets = tables.toTable({
-  "prototype": "(this is a placeholder to keep the timeline from clearing)"
+  "prototype": "(this is a placeholder to keep the timeline from clearing)",
+  "blank": "This post was intentionally left blank."
 })
 
 let keys = iterator(): string =
