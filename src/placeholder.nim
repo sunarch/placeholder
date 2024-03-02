@@ -35,7 +35,7 @@ type Options = object
   use_this: bool = true
   use_parens: bool = true
 
-proc placeholder(options: Options): string =
+func placeholder(options: Options): string =
   const
     this = "this is a"
     verb = "keep"

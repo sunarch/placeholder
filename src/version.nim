@@ -12,14 +12,14 @@ const
   CopyrightYears = "2024"
   CopyrightName = "András Németh"
 
-proc short: string =
+func short: string =
   result = fmt"{VersionMajor}.{VersionMinor}.{VersionPatch}"
 
-proc long*: string =
+func long*: string =
   result = fmt"{ProgramName} {short()}"
 
-proc compiled*: string =
+func compiled*: string =
   result = fmt"Compiled on {COMPILE_DATE}"
 
-proc copyright*: string =
+func copyright*: string =
   result = fmt"Copyright (c) {CopyrightYears} by {CopyrightName}"
