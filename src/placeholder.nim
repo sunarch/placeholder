@@ -84,9 +84,9 @@ proc main =
           of "help":
             show_help()
           of "version":
-            success_msg(version.long())
+            exit.success_msg(version.long())
           of "prototype":
-            success_msg(presets.prototype)
+            exit.success_msg(presets.prototype)
           of "preset-list":
             presets.list()
           of "preset":
