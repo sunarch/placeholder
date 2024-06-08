@@ -5,9 +5,6 @@
 from std/strformat import fmt
 import std/tables as tables
 
-# project imports
-import exit as exit
-
 let presets = tables.toTable({
   "prototype": "(this is a placeholder to keep the timeline from clearing)",
   "blank": "This post was intentionally left blank."
@@ -32,12 +29,12 @@ proc list* =
   echo("Available presets:")
   for preset in keys():
     echo(fmt"  - {preset}")
-  exit.success()
+  quit(QuitSuccess)
 
 proc output*(preset_name: string) =
   let preset_value = lookup(preset_name)
   case preset_value
     of "":
-      exit.failure_msg(fmt"No preset with given name: '{preset_name}'")
+      quit(fmt"No preset with given name: '{preset_name}'", QuitFailure)
     else:
-      exit.success_msg(preset_value)
+      quit(preset_value, QuitSuccess)

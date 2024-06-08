@@ -8,7 +8,6 @@ from std/strformat import fmt
 # project imports
 import version as version
 import presets as presets
-import exit as exit
 when defined(DEBUG):
   import debug as debug
 
@@ -29,7 +28,7 @@ proc show_help =
   echo("Options for regular output:")
   echo("  --no-parens    Don't use parentheses")
   echo("  --no-this      Don't use 'This is a' in front of the text")
-  exit.success()
+  quit(QuitSuccess)
 
 type Options = object
   use_this: bool = true
@@ -78,15 +77,15 @@ proc main =
         break
       of po.cmdShortOption, po.cmdLongOption:
         if p.key in options_long_no_val and p.val != "":
-          exit.failure_msg(fmt"Command line option '{p.key}' doesn't take a value")
+          quit(fmt"Command line option '{p.key}' doesn't take a value", QuitFailure)
         case p.key:
         # Options for direct output:
           of "help":
             show_help()
           of "version":
-            exit.success_msg(version.long())
+            quit(version.long(), QuitSuccess)
           of "prototype":
-            exit.success_msg(presets.prototype)
+            quit(presets.prototype, QuitSuccess)
           of "preset-list":
             presets.list()
           of "preset":
@@ -97,9 +96,9 @@ proc main =
           of "no-this":
             display_options.use_this = false
           else:
-            exit.failure_msg(fmt"Unrecognized command line option '{p.key}'")
+            quit(fmt"Unrecognized command line option '{p.key}'", QuitFailure)
       of po.cmdArgument:
-        exit.failure_msg(fmt"This program doesn't take any non-option arguments: '{p.key}'")
+        quit(fmt"This program doesn't take any non-option arguments: '{p.key}'", QuitFailure)
 
   echo(placeholder(display_options))
 
